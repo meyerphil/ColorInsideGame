@@ -18,7 +18,8 @@ export default class YellowRoom extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         let floor = this.add.rectangle(50,500,1600,100, 0xffffff).setOrigin(0,0);
         this.platforms.add(floor);
-        this.platforms.add(this.add.rectangle(0,0,100,500, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(0,-800,200,1600, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(950,-800,100,1600, 0xffffff).setOrigin(0,0));
         
         // dropping blocks
         this.blocks = this.physics.add.group();
