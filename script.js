@@ -1,5 +1,6 @@
 import Player from './player.js';
 import YellowRoom from './yellowRoom.js';
+import BlueRoom from './blueRoom.js';
 
 class ProtoGame extends Phaser.Scene {
     ground;
@@ -11,12 +12,14 @@ class ProtoGame extends Phaser.Scene {
         this.load.image('monkey', 'assets/sectionimage.png');
         this.load.image('box', 'assets/colorBox.png');
         this.load.image('dude', 'assets/stick.png');
+        this.load.image('bullet', 'assets/bullet.png');
         this.load.image('door', 'assets/door.png');
     }
     create(){
         // scenes
         this.scene.add('YellowRoom', YellowRoom);
-        //this.scene.start('YellowRoom');
+        this.scene.add('BlueRoom', BlueRoom);
+        this.scene.start('BlueRoom');
 
         // b&w filter
         let bw = true;
@@ -33,13 +36,14 @@ class ProtoGame extends Phaser.Scene {
         let floor = this.add.rectangle(50,500,1600,100, 0xffffff).setOrigin(0,0);
         this.platforms.add(floor);
         this.platforms.add(this.add.rectangle(200,300,100,50, 0xffffff).setOrigin(0,0));
-        this.platforms.add(this.add.rectangle(700,300,100,50, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(700,300,200,50, 0xffffff).setOrigin(0,0));
         this.platforms.add(this.add.rectangle(100,100,20,20, 0xffffff).setOrigin(0,0));
         
         let b = this.add.image(100,250, 'box').setOrigin(0,0).setScale(0.4);
         this.platforms.add(b);
 
-        this.doorY = this.physics.add.staticImage(800,440, 'door').setScale(0.5);
+        this.doorY = this.physics.add.staticImage(1000,440, 'door').setScale(0.5);
+        this.doorB = this.physics.add.staticImage(820,230, 'door').setScale(0.5);
 
         // create player
         this.player = new Player(this, 500, 300, 'dude');
@@ -57,7 +61,13 @@ class ProtoGame extends Phaser.Scene {
         this.physics.add.collider(this.player, this.doorY, () => {
             // Transition to the next level
             this.scene.start('YellowRoom');
-        })
+        });
+        this.physics.add.collider(this.player, this.doorB, () => {
+            // Transition to the next level
+            this.scene.start('BlueRoom');
+        });
+
+        
 
         // add camera
         this.cameras.main.startFollow(this.player, true, 0.05, 0.05);

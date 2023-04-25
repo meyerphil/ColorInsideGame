@@ -69,7 +69,7 @@ export default class YellowRoom extends Phaser.Scene {
 
         // add camera
         this.cameras.main.startFollow(this.player, true, 0.05, 0.05, 0, 200);
-        this.cameras.main.setZoom(0.5);
+        this.cameras.main.setZoom(0.7);
     }
   
     update() {
