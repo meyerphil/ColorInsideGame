@@ -11,15 +11,15 @@ export default class BlueRoom extends Phaser.Scene {
   
     create() {
         // camera
-        //this.cameras.main.setBounds(0, -gameHeight, gameWidth * 2, gameHeight*1.6);
+        this.cameras.main.setBounds(0, -gameHeight, gameWidth * 2, gameHeight*1.6);
         this.physics.world.setBounds(0, -gameHeight, gameWidth, gameHeight*2);
 
         // create world
         this.platforms = this.physics.add.staticGroup();
-        let floor = this.add.rectangle(50,500,1600,100, 0xffffff).setOrigin(0,0);
+        let floor = this.add.rectangle(50,500+shiftDown,1600,100, 0xffffff).setOrigin(0,0);
         this.platforms.add(floor);
-        this.platforms.add(this.add.rectangle(0,-800,200,1600, 0xffffff).setOrigin(0,0));
-        this.platforms.add(this.add.rectangle(1200,-800,100,1600, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(0,-800+shiftDown,200,1600, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(1600,-800+shiftDown,100,1600, 0xffffff).setOrigin(0,0));
         
 
         // create player
@@ -31,7 +31,7 @@ export default class BlueRoom extends Phaser.Scene {
 
         // add camera
         this.cameras.main.startFollow(this.player, true, 0.05, 0.05, 0, 50);
-        this.cameras.main.setZoom(0.9);
+        this.cameras.main.setZoom(1);
     }
   
     update() {
@@ -41,3 +41,4 @@ export default class BlueRoom extends Phaser.Scene {
 
 let gameWidth = 1600;
 let gameHeight = 1000;
+const shiftDown = 500;

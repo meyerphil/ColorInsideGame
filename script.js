@@ -16,37 +16,49 @@ class ProtoGame extends Phaser.Scene {
         this.load.image('door', 'assets/door.png');
     }
     create(){
+        console.log(this.game.gameOptions);
+        
         // scenes
-        this.scene.add('YellowRoom', YellowRoom);
-        this.scene.add('BlueRoom', BlueRoom);
-        //this.scene.start('BlueRoom');
+        if (!this.scene.get('YellowRoom')) {
+            this.scene.add('YellowRoom', YellowRoom);
+          }
+          if (!this.scene.get('BlueRoom')) {
+            this.scene.add('BlueRoom', BlueRoom);
+          }
+        //this.scene.start('YellowRoom');
 
         // b&w filter
         let bw = true;
+        
+        
         const grayscalePipeline = this.renderer.pipelines.add('Gray', new GrayScalePipeline(this.game));
         
         // camera demo https://labs.phaser.io/edit.html?src=src/camera/follow%20user%20controlled%20sprite.js
-        this.cameras.main.setBounds(0, -gameHeight, gameWidth * 2, gameHeight*2);
-        this.physics.world.setBounds(0, -gameHeight, gameWidth, gameHeight*2);
+        this.cameras.main.setBounds(0, 0, gameWidth * 2, gameHeight*2);
+        this.physics.world.setBounds(0, 0, gameWidth*2, gameHeight*2);
 
         // physics demo https://labs.phaser.io/edit.html?src=src/physics/arcade/basic%20platform.js
 
         // create world
         this.platforms = this.physics.add.staticGroup();
-        let floor = this.add.rectangle(50,500,1600,100, 0xffffff).setOrigin(0,0);
-        this.platforms.add(floor);
-        this.platforms.add(this.add.rectangle(200,300,100,50, 0xffffff).setOrigin(0,0));
-        this.platforms.add(this.add.rectangle(700,300,200,50, 0xffffff).setOrigin(0,0));
-        this.platforms.add(this.add.rectangle(100,100,20,20, 0xffffff).setOrigin(0,0));
+        let floor = this.add.rectangle(50,500+shiftDown,1600,100, 0xffffff).setOrigin(0,0);
+        this.platforms.add(this.add.rectangle(0,0,1600,100, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(0,-800+shiftDown,200,1600, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(1600,-800+shiftDown,100,1600, 0xffffff).setOrigin(0,0));
         
-        let b = this.add.image(100,250, 'box').setOrigin(0,0).setScale(0.4);
+        this.platforms.add(floor);
+        this.platforms.add(this.add.rectangle(200,300+shiftDown,100,50, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(700,300+shiftDown,200,50, 0xffffff).setOrigin(0,0));
+        this.platforms.add(this.add.rectangle(100,100+shiftDown,20,20, 0xffffff).setOrigin(0,0));
+        
+        let b = this.add.image(100,250+shiftDown, 'box').setOrigin(0,0).setScale(0.4);
         this.platforms.add(b);
 
-        this.doorY = this.physics.add.staticImage(1000,440, 'door').setScale(0.5);
-        this.doorB = this.physics.add.staticImage(820,230, 'door').setScale(0.5);
+        this.doorY = this.physics.add.staticImage(1400,440+shiftDown, 'door').setScale(0.5);
+        this.doorB = this.physics.add.staticImage(820,230+shiftDown, 'door').setScale(0.5);
 
         // create player
-        this.player = new Player(this, 500, 300, 'dude');
+        this.player = new Player(this, 500, 300+shiftDown, 'dude');
         //this.add.existing(this.player);
         
         // apply filter
@@ -60,6 +72,7 @@ class ProtoGame extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.player, this.doorY, () => {
             // Transition to the next level
+            this.scene.stop();
             this.scene.start('YellowRoom');
         });
         this.physics.add.collider(this.player, this.doorB, () => {
@@ -78,17 +91,17 @@ class ProtoGame extends Phaser.Scene {
     }
 }
 
-const gameOptions = {
-    powers: [],
-}
+
+
 
 let gameWidth = 1600;
-let gameHeight = 1000;
+let gameHeight = 900;
+const shiftDown = 500;
 
 let config = {
     type: Phaser.WEBGL,
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 1000,
     backgroundColor: 0x000000,
     physics: {
         default: 'arcade',
@@ -100,6 +113,10 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+
+game.gameOptions = {
+    YellowWin: false
+}
 
 // playtest two rooms
 // complete 3 colors to unlock final room
