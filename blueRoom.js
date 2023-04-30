@@ -41,12 +41,14 @@ export default class BlueRoom extends Phaser.Scene {
         this.blue = this.physics.add.staticImage(870, 470, 'blue').setScale(0.7);
         this.blue.body.setSize(100,100);
         this.blue.body.setOffset(100,100);
+        
+
 
         this.physics.add.collider(this.player, this.blue, () => {
           //clearInterval(this.myInterval);
           //this.time.removeAllEvents()
           console.log("Blue Win")
-          this.game.gameOptions.BLueWin = true;
+          this.game.gameOptions.BlueWin = true;
           this.scene.stop();
           this.scene.start('ProtoGame');
         });
@@ -73,7 +75,7 @@ export default class BlueRoom extends Phaser.Scene {
         for(let i = 0; i < 6; i++){
           this.shHel[i] = this.shMaxHel;
         }
-        console.log(this.shHel);
+        //console.log(this.shHel);
 
         // get random
         this.newChosen();
@@ -113,13 +115,14 @@ export default class BlueRoom extends Phaser.Scene {
         this.collidersPH.push(this.physics.add.collider(this.player, this.hexB));
 
         this.physics.add.collider(this.player.bullets, this.hexTL, (bullet) => {
-          console.log("TL hit");
+          //console.log("TL hit");
           bullet.destroy();
           if(this.shHel[0] == this.currentWave && this.chosen == 0){
             this.shHel[0]--;
             this.hex[0].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[0].setFillStyle(0x0000ff);
+            
 
             if(this.shHel.indexOf(this.currentWave) == -1){
               this.shieldBroke();
@@ -130,12 +133,12 @@ export default class BlueRoom extends Phaser.Scene {
           }
         });
         this.physics.add.collider(this.player.bullets, this.hexBL, (bullet) => {
-          console.log("BL hit");
+          //console.log("BL hit");
           bullet.destroy();
           if(this.shHel[1] == this.currentWave && this.chosen == 1){
             this.shHel[1]--;
             this.hex[1].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[1].setFillStyle(0x0000ff);
             
             if(this.shHel.indexOf(this.currentWave) == -1){
@@ -147,12 +150,12 @@ export default class BlueRoom extends Phaser.Scene {
 
         });
         this.physics.add.collider(this.player.bullets, this.hexT, (bullet) => {
-          console.log("T hit");
+          //console.log("T hit");
           bullet.destroy();
           if(this.shHel[2] == this.currentWave && this.chosen == 2){
             this.shHel[2]--;
             this.hex[2].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[2].setFillStyle(0x0000ff);
            
             if(this.shHel.indexOf(this.currentWave) == -1){
@@ -163,12 +166,12 @@ export default class BlueRoom extends Phaser.Scene {
           }
         });
         this.physics.add.collider(this.player.bullets, this.hexTR, (bullet) => {
-          console.log("TR hit");
+          //console.log("TR hit");
           bullet.destroy();
           if(this.shHel[3] == this.currentWave && this.chosen == 3){
             this.shHel[3]--;
             this.hex[3].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[3].setFillStyle(0x0000ff);
           
             if(this.shHel.indexOf(this.currentWave) == -1){
@@ -179,12 +182,12 @@ export default class BlueRoom extends Phaser.Scene {
           }
         });
         this.physics.add.collider(this.player.bullets, this.hexBR, (bullet) => {
-          console.log("BR hit");
+          //console.log("BR hit");
           bullet.destroy();
           if(this.shHel[4] == this.currentWave && this.chosen == 4){
             this.shHel[4]--;
             this.hex[4].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[4].setFillStyle(0x0000ff);
            
             if(this.shHel.indexOf(this.currentWave) == -1){
@@ -195,12 +198,12 @@ export default class BlueRoom extends Phaser.Scene {
           }
         });
         this.physics.add.collider(this.player.bullets, this.hexB, (bullet) => {
-          console.log("B hit");
+          //console.log("B hit");
           bullet.destroy();
           if(this.shHel[5] == this.currentWave && this.chosen == 5){
             this.shHel[5]--;
             this.hex[5].setAlpha(0.5);
-            console.log(this.shHel);
+            //console.log(this.shHel);
             this.hex[5].setFillStyle(0x0000ff);
             
             if(this.shHel.indexOf(this.currentWave) == -1){
@@ -229,9 +232,18 @@ export default class BlueRoom extends Phaser.Scene {
 
       let randomIndex = valid[Phaser.Math.Between(0, valid.length - 1)];
 
-      console.log(randomIndex);
+      //console.log(randomIndex);
       this.chosen = randomIndex;
       this.hex[this.chosen].setFillStyle(0x5500bb);
+
+      this.blue.setAlpha(0.7);
+            this.time.addEvent({
+              delay: 500,
+              callback: function() {
+                this.blue.setAlpha(1);
+              },
+              callbackScope: this
+      });
     }
 
     shieldBroke(){
@@ -239,6 +251,7 @@ export default class BlueRoom extends Phaser.Scene {
       console.log(this.currentWave);
       for(let i = 0; i < 6; i++){
         this.hex[i].setAlpha(1);
+        
       }
 
       if(this.currentWave == 0){
@@ -248,6 +261,7 @@ export default class BlueRoom extends Phaser.Scene {
         for(let i = 0; i < 6; i++){
           this.collidersPH[i].destroy();
         }
+        this.blue.setAlpha(0.7);
 
       } else {
         this.newChosen();

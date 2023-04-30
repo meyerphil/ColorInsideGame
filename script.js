@@ -29,7 +29,7 @@ class ProtoGame extends Phaser.Scene {
         if (!this.scene.get('RedRoom')) {
             this.scene.add('RedRoom', RedRoom);
         }
-        //this.scene.start('RedRoom');
+        //this.scene.start('BlueRoom');
 
         // b&w filter
         let bw = true;
