@@ -25,7 +25,7 @@ class ProtoGame extends Phaser.Scene {
           if (!this.scene.get('BlueRoom')) {
             this.scene.add('BlueRoom', BlueRoom);
           }
-        //this.scene.start('YellowRoom');
+        //this.scene.start('BlueRoom');
 
         // b&w filter
         let bw = true;
@@ -115,7 +115,8 @@ let config = {
 let game = new Phaser.Game(config);
 
 game.gameOptions = {
-    YellowWin: false
+    YellowWin: false,
+    BlueWin: false
 }
 
 // playtest two rooms

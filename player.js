@@ -36,7 +36,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.scene.game.gameOptions.YellowWin){
             this.maxJumps = 2;
         }
-        console.log(this.maxJumps);
+        //console.log(this.maxJumps);
       
     }
   
@@ -64,7 +64,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         {   
             this.setVelocityY(-500);
             this.jumps++;
-            console.log(this.jumps);
+            //console.log(this.jumps);
             this.canJump = false;
         
 
