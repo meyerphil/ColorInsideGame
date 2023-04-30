@@ -20,9 +20,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // create health
         this.health = [];
         this.maxHealth = 3;
-        if(this.scene.scene.key !== "ProtoGame"){
+        if(this.scene.scene.key == "YellowRoom"){
             for (let i = 0; i < this.maxHealth; i++) {
                 const heartSprite = scene.add.sprite(-250 + (i * 120), 0, 'dude').setScale(0.5).setScrollFactor(0);
+                
+                this.health.push(heartSprite);
+            }
+        }
+        if(this.scene.scene.key == "RedRoom"){
+            for (let i = 0; i < this.maxHealth; i++) {
+                const heartSprite = scene.add.sprite((i * 120), 0, 'dude').setScale(0.5).setScrollFactor(0);
                 
                 this.health.push(heartSprite);
             }
@@ -62,15 +69,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W).isDown && this.jumps < this.maxJumps && this.canJump)
         {   
-            this.setVelocityY(-500);
-            this.jumps++;
-            //console.log(this.jumps);
-            this.canJump = false;
-        
+            if(!(this.body.touching.down)){
+                if(this.maxJumps > 1){
+                    this.setVelocityY(-500);
+                    this.jumps++;
+                    this.jumps++;
+                    //console.log(this.jumps);
+                    this.canJump = false;
+                
+    
+                    setTimeout(() => {
+                        this.canJump = true;
+                    }, 500);
+                }
+            } else {
+                this.setVelocityY(-500);
+                this.jumps++;
+                //console.log(this.jumps);
+                this.canJump = false;
+            
 
-            setTimeout(() => {
-                this.canJump = true;
-              }, 500);
+                setTimeout(() => {
+                    this.canJump = true;
+                }, 500);
+            }
         }
 
         if (this.pointer.isDown) {

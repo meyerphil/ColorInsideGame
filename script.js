@@ -1,6 +1,7 @@
 import Player from './player.js';
 import YellowRoom from './yellowRoom.js';
 import BlueRoom from './blueRoom.js';
+import RedRoom from './redRoom.js';
 
 class ProtoGame extends Phaser.Scene {
     ground;
@@ -21,11 +22,14 @@ class ProtoGame extends Phaser.Scene {
         // scenes
         if (!this.scene.get('YellowRoom')) {
             this.scene.add('YellowRoom', YellowRoom);
-          }
-          if (!this.scene.get('BlueRoom')) {
-            this.scene.add('BlueRoom', BlueRoom);
-          }
-        //this.scene.start('BlueRoom');
+        }
+        if (!this.scene.get('BlueRoom')) {
+        this.scene.add('BlueRoom', BlueRoom);
+        }
+        if (!this.scene.get('RedRoom')) {
+            this.scene.add('RedRoom', RedRoom);
+        }
+        //this.scene.start('RedRoom');
 
         // b&w filter
         let bw = true;
@@ -55,7 +59,9 @@ class ProtoGame extends Phaser.Scene {
         this.platforms.add(b);
 
         this.doorY = this.physics.add.staticImage(1400,440+shiftDown, 'door').setScale(0.5);
-        this.doorB = this.physics.add.staticImage(820,230+shiftDown, 'door').setScale(0.5);
+        this.doorB = this.physics.add.staticImage(870,230+shiftDown, 'door').setScale(0.5);
+        this.doorR = this.physics.add.staticImage(250,195+shiftDown, 'door').setScale(0.5);
+
 
         // create player
         this.player = new Player(this, 500, 300+shiftDown, 'dude');
@@ -77,8 +83,15 @@ class ProtoGame extends Phaser.Scene {
         });
         this.physics.add.collider(this.player, this.doorB, () => {
             // Transition to the next level
+            this.scene.stop();
             this.scene.start('BlueRoom');
         });
+        this.physics.add.collider(this.player, this.doorR, () => {
+            // Transition to the next level
+            this.scene.stop();
+            this.scene.start('RedRoom');
+        });
+
 
         
 
@@ -116,7 +129,8 @@ let game = new Phaser.Game(config);
 
 game.gameOptions = {
     YellowWin: false,
-    BlueWin: false
+    BlueWin: false,
+    RedWin: false,
 }
 
 // playtest two rooms
