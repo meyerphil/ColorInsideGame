@@ -2,8 +2,10 @@ import Player from './player.js';
 import YellowRoom from './yellowRoom.js';
 import BlueRoom from './blueRoom.js';
 import RedRoom from './redRoom.js';
+import BossRoom from './bossRoom.js';
+import CutScene from './cutscene.js';
 
-class ProtoGame extends Phaser.Scene {
+export default class ProtoGame extends Phaser.Scene {
     ground;
 
     constructor() {
@@ -15,8 +17,15 @@ class ProtoGame extends Phaser.Scene {
         this.load.image('dude', 'assets/stick.png');
         this.load.image('bullet', 'assets/bullet.png');
         this.load.image('door', 'assets/door.png');
+        this.load.image('bossDoor', 'assets/bossDoor.png');
     }
     create(){
+
+        if(this.game.gameOptions.YellowWin
+            && this.game.gameOptions.BlueWin
+            && this.game.gameOptions.RedWin){
+                this.game.gameOptions.Win = true;
+            }
         console.log(this.game.gameOptions);
         
         // scenes
@@ -29,7 +38,13 @@ class ProtoGame extends Phaser.Scene {
         if (!this.scene.get('RedRoom')) {
             this.scene.add('RedRoom', RedRoom);
         }
-        //this.scene.start('BlueRoom');
+        if (!this.scene.get('BossRoom')) {
+            this.scene.add('BossRoom', BossRoom);
+        
+        if (!this.scene.get('CutScene')) {
+            this.scene.add('CutScene', CutScene);
+        }}
+        //this.scene.start('CutScene');
 
         // b&w filter
         let bw = true;
@@ -58,9 +73,11 @@ class ProtoGame extends Phaser.Scene {
         let b = this.add.image(100,250+shiftDown, 'box').setOrigin(0,0).setScale(0.4);
         this.platforms.add(b);
 
-        this.doorY = this.physics.add.staticImage(1400,440+shiftDown, 'door').setScale(0.5);
-        this.doorB = this.physics.add.staticImage(870,230+shiftDown, 'door').setScale(0.5);
-        this.doorR = this.physics.add.staticImage(250,195+shiftDown, 'door').setScale(0.5);
+        //this.doorY = this.physics.add.staticImage(1400,440+shiftDown, 'door').setScale(0.5);
+        //this.doorB = this.physics.add.staticImage(870,230+shiftDown, 'door').setScale(0.5);
+        //this.doorR = this.physics.add.staticImage(250,195+shiftDown, 'door').setScale(0.5);
+        //this.bossDoor = this.physics.add.staticImage(1050,400+shiftDown, 'bossDoor').setScale(0.5);
+
 
 
         // create player
@@ -76,21 +93,44 @@ class ProtoGame extends Phaser.Scene {
         }
         // add physics
         this.physics.add.collider(this.player, this.platforms);
-        this.physics.add.collider(this.player, this.doorY, () => {
-            // Transition to the next level
-            this.scene.stop();
-            this.scene.start('YellowRoom');
-        });
-        this.physics.add.collider(this.player, this.doorB, () => {
-            // Transition to the next level
-            this.scene.stop();
-            this.scene.start('BlueRoom');
-        });
-        this.physics.add.collider(this.player, this.doorR, () => {
-            // Transition to the next level
-            this.scene.stop();
-            this.scene.start('RedRoom');
-        });
+
+        // add doors
+        if(!this.game.gameOptions.YellowWin){
+            this.doorY = this.physics.add.staticImage(1400,440+shiftDown, 'door').setScale(0.5);
+            this.physics.add.collider(this.player, this.doorY, () => {
+                // Transition to the next level
+                this.scene.stop();
+                this.scene.start('YellowRoom');
+            });
+        }
+
+        if(!this.game.gameOptions.BlueWin){
+            this.doorB = this.physics.add.staticImage(870,230+shiftDown, 'door').setScale(0.5);
+            this.physics.add.collider(this.player, this.doorB, () => {
+                // Transition to the next level
+                this.scene.stop();
+                this.scene.start('BlueRoom');
+            });
+        }
+
+        if(!this.game.gameOptions.RedWin){
+            this.doorR = this.physics.add.staticImage(250,195+shiftDown, 'door').setScale(0.5);
+            this.physics.add.collider(this.player, this.doorR, () => {
+                // Transition to the next level
+                this.scene.stop();
+                this.scene.start('RedRoom');
+            });
+        }
+
+        if(this.game.gameOptions.Win){
+            this.bossDoor = this.physics.add.staticImage(1050,400+shiftDown, 'bossDoor').setScale(0.5);
+            this.physics.add.collider(this.player, this.bossDoor, () => {
+                // Transition to the next level
+                this.scene.stop();
+                this.scene.start('CutScene');
+            });
+        }
+
 
 
         
@@ -122,7 +162,7 @@ let config = {
             gravity: { y: 600 }
         }
     },
-    scene: [ProtoGame],
+    scene: [CutScene],
 }
 
 let game = new Phaser.Game(config);
@@ -131,6 +171,7 @@ game.gameOptions = {
     YellowWin: false,
     BlueWin: false,
     RedWin: false,
+    Win: false
 }
 
 // playtest two rooms
@@ -157,7 +198,7 @@ game.gameOptions = {
 // use platform as a shield, they crumble from blocks)
 // the order of attacks is random
 //  60% chance of red, 40% chance of yellow
-//  40% health, then it goes into recovery mode
+//  less than 40% health, then it goes into recovery mode
 
 
 
